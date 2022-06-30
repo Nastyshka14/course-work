@@ -1,0 +1,10 @@
+.modalInput {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    margin-bottom: 25px;
+}
+
+.inputTitle {
+    margin-right: 10px;
+}

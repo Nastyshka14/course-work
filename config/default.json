@@ -1,0 +1,6 @@
+{
+    "port": 5000,
+    "jwtSecret": "nastya course work",
+    "mongoUri": "mongodb+srv://nastya:kokokosha14@cluster0.knqnp.mongodb.net/?retryWrites=true&w=majority",
+    "baseUrl": "http://localhost:5000"
+}
