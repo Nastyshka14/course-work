@@ -3,7 +3,7 @@
     margin: 0 auto;
 }
 
-.collectionsList {
+.home-collections {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
@@ -16,5 +16,10 @@
     flex-grow: 1;
     background-color: #00fff0;
 }
+
+.home-title {
+    margin: 15px 0;
+}
+
 
 

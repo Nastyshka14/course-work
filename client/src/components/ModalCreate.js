@@ -4,9 +4,12 @@ import { UploadOutlined } from '@ant-design/icons';
 import { Button, Modal, Input, Select, message, Upload } from 'antd';
 import { useState } from 'react';
 import './ModalCreate.css'
+import { PlusCircleOutlined } from '@ant-design/icons';
+
 import { useHttp } from '../hooks/http.hook';
 import { AuthContext } from '../context/auth.context';
 const { Option } = Select;
+
 
 
 export const ModalCreate = ({updateCollection}) => {
@@ -29,7 +32,7 @@ const onChangeInput = (event) => {
   const reader = new FileReader();
   reader.onload = event => {
     setImage(event.target.result )
-    
+
   };
   reader.readAsDataURL(file);
 
@@ -57,11 +60,11 @@ const showMessage = (msg) => {
   //   headers: {
   //     authorization: 'authorization-text',
   //   },
-  
+
     // onChange(info) {
     //   if (info.file.status !== 'uploading') {
     //     console.log(info.file, info.fileList);
-    
+
     //     message.success(`${info.file.name} file uploaded successfully`);
     //   } else if (info.file.status === 'error') {
     //     message.error(`${info.file.name} file upload failed.`);
@@ -82,12 +85,12 @@ const onSearch = (value) => {
   };
 
   const handleOk = () => {
-    
+
     setIsModalVisible(false);
     // downloadImage()
     createCollectionHandler()
-    
-    
+
+
   };
 
   const handleCancel = () => {
@@ -101,7 +104,7 @@ const onSearch = (value) => {
 
   return (
     <>
-      <Button type="primary" onClick={showModal}>
+      <Button block className="showModalBtn" onClick={showModal} icon={<PlusCircleOutlined />} >
         Добавить коллекцию
       </Button>
       <Modal title="Добавить коллекцию" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
@@ -120,7 +123,7 @@ const onSearch = (value) => {
     <Option  value='Lucy'>Lucy</Option>
     <Option value='Tom'>Tom</Option>
   </Select></div>
-  
+
         <div className='modalInput'><h3>Загрузить изображение</h3>
         <input type="file" className="form-control-file" onChange={onChangeInput}/>
   </div>
