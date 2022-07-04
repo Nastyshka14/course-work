@@ -4,7 +4,7 @@ const schema = new Schema({
 name: {type: String, required: true},
 description: {type: String, required: true},
 theme: {type: String},
-image:{data: Buffer, contentType: String},
+image:{type: String},
 date:{type: Date, default: new Date()},
 owner: {type: Types.ObjectId, ref: 'User'}
 })

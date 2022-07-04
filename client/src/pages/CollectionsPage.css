@@ -1,0 +1,12 @@
+.containerItem {
+    display: flex;
+flex-direction: column;
+width: 10%;
+    height: 12%;
+    background-color: palevioletred;
+    border: 1px solid black;
+}
+.containerList {
+    display: flex;
+flex-direction: row;
+}

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import 'antd/dist/antd.css';
 import { UploadOutlined } from '@ant-design/icons';
 import { Button, Modal, Input, Select, message, Upload } from 'antd';
@@ -9,74 +9,65 @@ import { AuthContext } from '../context/auth.context';
 const { Option } = Select;
 
 
-export const ModalCreate = () => {
+export const ModalCreate = ({updateCollection}) => {
   const auth = useContext(AuthContext);
   const {request} = useHttp();
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [image, setImage] = useState('')
   const [modal, setModal] = useState({
     name: '',
     description: '',
     theme: ''})
-    // image: '',
-    // owner: '',
-    // date: ''
-    const [image, setImage] = useState('')
-    
 
 
 const changeHandler = (event) => {
     setModal({ ...modal, [event.target.name]: event.target.value });
 };
 
-const onFileChangeHandler = (event) => {
-  setImage({[event.target.name]: event.target.files[0]})
-  console.log('uuu' , event.target.files[0])
+const onChangeInput = (event) => {
+  const file = event.target.files.item(0)
+  const reader = new FileReader();
+  reader.onload = event => {
+    setImage(event.target.result )
+    
+  };
+  reader.readAsDataURL(file);
+
 }
+
 const createCollectionHandler = async () => {
- 
   try {
-    const data = await request( '/api/collection/create', 'POST', {...modal}, {Authorization: `Bearer ${auth.token}`})
-    console.log(data)
-    // await message.success(data.message);
+    const data = await request( '/api/collection/create', 'POST', {...modal, image}, {Authorization: `Bearer ${auth.token}`})
+    updateCollection(data)
+    await message.success(data.message);
   } catch (e) {
       showMessage(e.message);
   }
 };
 
-const downloadImage = async ()  => {
-  try {
-  const data = await request( '/api/collection/stats', 'POST', {image: image})
- console.log(data)
-
-  } catch (e) {
-    showMessage(e.message);
-  }
-}
 const showMessage = (msg) => {
   message.error(msg);
 };
 
 
 
-  const props = {
-    name: 'file',
-    action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-    headers: {
-      authorization: 'authorization-text',
-    },
+  // const props = {
+  //   name: 'file',
+  //   action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+  //   headers: {
+  //     authorization: 'authorization-text',
+  //   },
   
-    onChange(info) {
-      if (info.file.status !== 'uploading') {
-        console.log(info.file, info.fileList);
-      }
-
-      if (info.file.status === 'done') {
-        message.success(`${info.file.name} file uploaded successfully`);
-      } else if (info.file.status === 'error') {
-        message.error(`${info.file.name} file upload failed.`);
-      }
-    },
-  };
+    // onChange(info) {
+    //   if (info.file.status !== 'uploading') {
+    //     console.log(info.file, info.fileList);
+    
+    //     message.success(`${info.file.name} file uploaded successfully`);
+    //   } else if (info.file.status === 'error') {
+    //     message.error(`${info.file.name} file upload failed.`);
+    //   }
+    // },
+  // };
 
 // const onChange = (value) => {
 //   console.log(`selected ${value}`);
@@ -93,7 +84,7 @@ const onSearch = (value) => {
   const handleOk = () => {
     
     setIsModalVisible(false);
-    downloadImage()
+    // downloadImage()
     createCollectionHandler()
     
     
@@ -131,12 +122,7 @@ const onSearch = (value) => {
   </Select></div>
   
         <div className='modalInput'><h3>Загрузить изображение</h3>
-        <Upload {...props}>
-    <Button icon={<UploadOutlined />} 
-    value={image}
-    onChange={onFileChangeHandler}
-    >Кликни чтобы загрузить</Button>
-  </Upload>
+        <input type="file" className="form-control-file" onChange={onChangeInput}/>
   </div>
       </Modal>
     </>
