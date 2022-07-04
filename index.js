@@ -1,7 +1,7 @@
 const express = require('express')
 const config = require('config')
 const mongoose = require('mongoose')
-var bodyParser = require('body-parser');
+
 
 
 const app = express()

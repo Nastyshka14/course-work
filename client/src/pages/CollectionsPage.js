@@ -1,38 +1,50 @@
-import React, { useState } from "react";
+import "./CollectionsPage.css";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { ModalCreate } from "../components/ModalCreate";
+import { CollectionItem } from "../components/CollectionItem";
+import { AuthContext } from "../context/auth.context";
+import { useHttp } from "../hooks/http.hook";
+import { Link } from "react-router-dom";
 
-// arrayBufferToBase64(buffer) {
-//     var binary = '';
-//     var bytes = [].slice.call(new Uint8Array(buffer));
-//     bytes.forEach((b) => binary += String.fromCharCode(b));
-//     return window.btoa(binary);
-// };
 
 export const CollectionsPage = () => {
-    const [image, setImage] = useState('')
-    // const onFileChangeHandler = (event) => {
-    //     setImage({[event.target.name]: event.target.files[0]})
-    //     console.log('uuu' , event.target.files[0])}
+  const { request } = useHttp();
+  const { token } = useContext(AuthContext);
+  const [collections, setCollections] = useState([]);
+  const fetchCollections = useCallback(async () => {
+    try {
+      const fetched = await request("/api/collection/", "GET", null, {
+        Authorization: `Bearer ${token}`,
+      });
+      setCollections(fetched);
+    } catch (e) {}
+  }, [token, request]);
 
-        const downloadImage = async ()  => {
-            try {
-            const data = await fetch( '/api/collection/stats', 'POST', {image})
-           console.log(data)
-          
-            } catch (e) {
-              console.log(e.message);
-            }
-          }
-return (
-<div>
+  useEffect(() => {
+    fetchCollections();
+  }, [fetchCollections]);
 
-<ModalCreate className='modalBtn' />
-<form action="/stats" enctype="multipart/form-data" method="post">
-  <div class="form-group">
-    <input type="file" class="form-control-file" name="uploaded_file"/>
-    <input type="text" class="form-control" placeholder="Number of speakers" name="nspeakers" />
-    <input type="submit" value="Get me the stats!" class="btn btn-default" onClick={downloadImage} />            
-  </div>
-</form>
-</div> )
-}
+  const updateCollection = (collection) => {
+    setCollections([...collections, collection])
+  }
+
+  return (
+    <div className="container">
+      <ModalCreate className="modalBtn" updateCollection={updateCollection} />
+      <div className="containerList">
+        {collections.map((collection, index) => {
+          return (
+            <div className="containerItem">
+              <div>{index + 1}</div>
+              <img src={collection.image} alt="imagge" />
+              <div>{collection.name}</div>
+              <div>{collection.description}</div>
+              <div>{collection.theme}</div>
+              <Link to={`/detail/${collection._id}`} replace></Link>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
