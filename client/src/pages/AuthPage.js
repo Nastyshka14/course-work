@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import { AuthContext } from '../context/auth.context';
 import { useHttp } from '../hooks/http.hook';
 import { Form, Input, Button } from 'antd';
+import { Card } from 'antd';
 import { message } from 'antd';
 import { Link } from 'react-router-dom';
 
@@ -20,7 +21,7 @@ const { loading, request} = useHttp();
                         setForm({ ...form, [event.target.name]: event.target.value });
                     };
 
-                   
+
   const showMessage = (msg) => {
     message.error(msg);
   };
@@ -43,88 +44,81 @@ const { loading, request} = useHttp();
   };
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingTop: '5%',
-      }}
-    >
-      <h1
-        style={{
-          marginBottom: '20px',
-        }}
-      >
-        Авторизация
-      </h1>
-      <Form
-        style={{ width: '70%', paddingRight: '13%' }}
-        name="basic"
-        labelCol={{ span: 8 }}
-        wrapperCol={{ span: 16 }}
-        initialValues={{ remember: true }}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-        autoComplete="off"
-      >
-        <Form.Item
-          label="Email"
-          name="email"
-          rules={[{ required: true, message: 'Please input your username!' }]}
+    <div style={{
+      width: '100%',
+      height: '100vh',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+    }}>
+      <Card style={{
+        width: '25%',
+        minWidth: '400px'
+      }}>
+        <h1
+          style={{
+            width: '100%',
+            textAlign: 'center',
+            fontSize: '25px'
+          }}
         >
-          <Input
-            placeholder="Введите email"
-            id="email"
-            type="text"
+          Авторизация
+        </h1>
+        <Form
+          name="basic"
+          initialValues={{ remember: true }}
+          onFinish={onFinish}
+          onFinishFailed={onFinishFailed}
+          autoComplete="off"
+        >
+          <Form.Item
             name="email"
-            value={form.email}
-            onChange={changeHandler}
-          />
-        </Form.Item>
-
-        <Form.Item
-          label="Пароль"
-          name="password"
-          rules={[{ required: true, message: 'Please input your password!' }]}
-        >
-          <Input.Password
-            placeholder="Введите пароль"
-            id="password"
-            type="password"
-            name="password"
-            value={form.password}
-            onChange={changeHandler}
-            className="yellow-input"
-            
-          />
-        </Form.Item>
-
-        <Form.Item
-          name="remember"
-          valuePropName="checked"
-          wrapperCol={{ offset: 8, span: 16 }}
-        ></Form.Item>
-
-        <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-          <Button
-            
-            onClick={loginHandler}
-            disabled={loading}
-
-            style={{ marginRight: '10px' }}
+            rules={[{ required: true, message: 'Please input your username!' }]}
           >
-            Войти
-          </Button>
+            <Input
+              placeholder="Введите email"
+              id="email"
+              type="text"
+              name="email"
+              value={form.email}
+              onChange={changeHandler}
+            />
+          </Form.Item>
 
-          <Link to="/reg" replace>
-            <Button 
-            disabled={loading}
-            >Регистрация</Button>
-          </Link>
-        </Form.Item>
-      </Form>
+          <Form.Item
+            name="password"
+            rules={[{ required: true, message: 'Please input your password!' }]}
+          >
+            <Input.Password
+              placeholder="Введите пароль"
+              id="password"
+              type="password"
+              name="password"
+              value={form.password}
+              onChange={changeHandler}
+              className="yellow-input"
+            />
+          </Form.Item>
+
+          <Form.Item>
+            <Button
+              type="primary"
+              block
+              style={{ marginBottom: '10px' }}
+              onClick={loginHandler}
+              disabled={loading}
+            >
+              Войти
+            </Button>
+
+            <Link to="/reg" replace>
+              <Button block disabled={loading}>
+                Регистрация
+              </Button>
+            </Link>
+          </Form.Item>
+        </Form>
+      </Card>
     </div>
   );
 };
