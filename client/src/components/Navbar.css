@@ -1,7 +1,27 @@
 .header {
+    height: 70px;
+    padding: 0 300px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    background-color: #171717;
+}
+
+.logo {
+    width: 140px;
+    height: 35px;
+    background: url(../../public/cabinet-logo.svg) no-repeat center center;
+    background-size: contain;
+}
+
+.username {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #00fff0;
+    font-size: 17px;
+    font-weight: 500;
+    cursor: pointer;
 }
 
 .title {
@@ -9,29 +29,4 @@
     margin-right: 650px;
     color: #fff;
     font-size: 36px;
-    
 }
-.menu {
-    display: flex;
-justify-content: space-between;
-align-items: center;
-}
-/* .logoutBtn {
-    display: flex;
-
-} */
-
-.logo {
-  
-    width: 54px;
-    height: 56px;
-    background: url(../../public/logotype.png) no-repeat center center;
-  }
-  
-
-  
-  .site-layout-background {
-    background: #fff;
-  }
-
-  

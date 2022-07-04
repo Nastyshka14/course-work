@@ -1,1 +1,10 @@
-@import "~antd/dist/antd.min.css"
+@import "~antd/dist/antd.min.css";
+
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
