@@ -4,6 +4,7 @@ import { ModalCreate } from "../components/ModalCreate";
 import { AuthContext } from "../context/auth.context";
 import { useHttp } from "../hooks/http.hook";
 import { Card } from 'antd';
+import { BrowserRouter, Link, NavLink } from "react-router-dom";
 const { Meta } = Card;
 
 export const CollectionsPage = () => {
@@ -16,15 +17,17 @@ export const CollectionsPage = () => {
         Authorization: `Bearer ${token}`,
       });
       setCollections(fetched);
+
     } catch (e) {}
   }, [token, request]);
 
   useEffect(() => {
     fetchCollections();
-  }, [fetchCollections]);
+  }, [fetchCollections, collections]);
 
   const updateCollection = (collection) => {
     setCollections([...collections, collection])
+    console.log('collection: ', {collection, collections})
   }
 
   return (
@@ -34,6 +37,8 @@ export const CollectionsPage = () => {
       <div className="collectionsList">
         {collections.map((collection, index) => {
           return (
+
+            <Link to={`/detail/${collection._id}`}>
             <Card
               key={index}
               hoverable
@@ -50,6 +55,8 @@ export const CollectionsPage = () => {
                 }
               />
             </Card>
+            </Link>
+
           );
         })}
       </div>

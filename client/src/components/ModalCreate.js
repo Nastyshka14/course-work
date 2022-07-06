@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useCallback, useContext, useEffect } from 'react';
 import 'antd/dist/antd.css';
 import { UploadOutlined } from '@ant-design/icons';
 import { Button, Modal, Input, Select, message, Upload } from 'antd';
@@ -52,30 +52,6 @@ const showMessage = (msg) => {
   message.error(msg);
 };
 
-
-
-  // const props = {
-  //   name: 'file',
-  //   action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-  //   headers: {
-  //     authorization: 'authorization-text',
-  //   },
-
-    // onChange(info) {
-    //   if (info.file.status !== 'uploading') {
-    //     console.log(info.file, info.fileList);
-
-    //     message.success(`${info.file.name} file uploaded successfully`);
-    //   } else if (info.file.status === 'error') {
-    //     message.error(`${info.file.name} file upload failed.`);
-    //   }
-    // },
-  // };
-
-// const onChange = (value) => {
-//   console.log(`selected ${value}`);
-// };
-
 const onSearch = (value) => {
   console.log('search:', value);
 };
@@ -85,9 +61,7 @@ const onSearch = (value) => {
   };
 
   const handleOk = () => {
-
     setIsModalVisible(false);
-    // downloadImage()
     createCollectionHandler()
 
 
@@ -119,9 +93,9 @@ const onSearch = (value) => {
     onSearch={onSearch}
     filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
   >
-    <Option value='Jack'>Jack</Option>
-    <Option  value='Lucy'>Lucy</Option>
-    <Option value='Tom'>Tom</Option>
+    <Option value='Книги'>Книги</Option>
+    <Option  value='Музыка'>Музыка</Option>
+    <Option value='Кино'>Кино</Option>
   </Select></div>
 
         <div className='modalInput'><h3>Загрузить изображение</h3>
