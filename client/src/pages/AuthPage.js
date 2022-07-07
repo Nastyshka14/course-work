@@ -1,26 +1,25 @@
-import React, { useContext, useState } from 'react';
-import { AuthContext } from '../context/auth.context';
-import { useHttp } from '../hooks/http.hook';
-import { Form, Input, Button } from 'antd';
-import { Card } from 'antd';
-import { message } from 'antd';
-import { Link } from 'react-router-dom';
-
+import React, { useContext, useState } from "react";
+import { AuthContext } from "../context/auth.context";
+import { useHttp } from "../hooks/http.hook";
+import { Form, Input, Button } from "antd";
+import { Card } from "antd";
+import { message } from "antd";
+import { Link, useNavigate } from "react-router-dom";
 
 // import { API_PATH } from '../constants';
 
 export const AuthPage = () => {
   const auth = useContext(AuthContext);
-const { loading, request} = useHttp();
-                    const [form, setForm] = useState({
-                        email: '',
-                        password: '',
-                    });
+  const { loading, request } = useHttp();
+  const [form, setForm] = useState({
+    email: "",
+    password: "",
+  });
+  const navigate = useNavigate()
 
-                    const changeHandler = (event) => {
-                        setForm({ ...form, [event.target.name]: event.target.value });
-                    };
-
+  const changeHandler = (event) => {
+    setForm({ ...form, [event.target.name]: event.target.value });
+  };
 
   const showMessage = (msg) => {
     message.error(msg);
@@ -28,38 +27,43 @@ const { loading, request} = useHttp();
 
   const loginHandler = async () => {
     try {
-      const data = await request( '/api/auth/login', 'POST', { ...form })
-      auth.login(data.token, data.userId);
+      const data = await request("/api/auth/login", "POST", { ...form });
+      auth.login(data.token, data.userId, data.username, data.userRole);
+      navigate('/homepage')
     } catch (e) {
-        showMessage(e.message);
+      showMessage(e.message);
     }
   };
 
   const onFinish = (values) => {
-    console.log('Success:', values);
+    console.log("Success:", values);
   };
 
   const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo);
+    console.log("Failed:", errorInfo);
   };
 
   return (
-    <div style={{
-      width: '100%',
-      height: '100vh',
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-    }}>
-      <Card style={{
-        width: '25%',
-        minWidth: '400px'
-      }}>
+    <div
+      style={{
+        width: "100%",
+        height: "100vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Card
+        style={{
+          width: "25%",
+          minWidth: "400px",
+        }}
+      >
         <h1
           style={{
-            width: '100%',
-            textAlign: 'center',
-            fontSize: '25px'
+            width: "100%",
+            textAlign: "center",
+            fontSize: "25px",
           }}
         >
           Авторизация
@@ -73,7 +77,7 @@ const { loading, request} = useHttp();
         >
           <Form.Item
             name="email"
-            rules={[{ required: true, message: 'Please input your username!' }]}
+            rules={[{ required: true, message: "Please input your username!" }]}
           >
             <Input
               placeholder="Введите email"
@@ -87,7 +91,7 @@ const { loading, request} = useHttp();
 
           <Form.Item
             name="password"
-            rules={[{ required: true, message: 'Please input your password!' }]}
+            rules={[{ required: true, message: "Please input your password!" }]}
           >
             <Input.Password
               placeholder="Введите пароль"
@@ -104,7 +108,7 @@ const { loading, request} = useHttp();
             <Button
               type="primary"
               block
-              style={{ marginBottom: '10px' }}
+              style={{ marginBottom: "10px" }}
               onClick={loginHandler}
               disabled={loading}
             >

@@ -1,12 +1,20 @@
-import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
-import { AuthContext } from '../context/auth.context';
-import { Dropdown, Menu } from 'antd';
-import './Navbar.css';
-import { UserOutlined, DatabaseOutlined, LogoutOutlined } from '@ant-design/icons';
+import React, { useContext } from "react";
+import { Link } from "react-router-dom";
+import { AuthContext } from "../context/auth.context";
+import { Button, Dropdown, Menu } from "antd";
+import "./Navbar.css";
+import {
+  UserOutlined,
+  DatabaseOutlined,
+  LogoutOutlined,
+  UsergroupDeleteOutlined
+} from "@ant-design/icons";
 
 export const Navbar = () => {
   const auth = useContext(AuthContext);
+  const isAuthenticated = auth.isAuthenticated;
+  const username = auth.username;
+
   const logoutHandler = (event) => {
     auth.logout();
   };
@@ -15,15 +23,20 @@ export const Navbar = () => {
     <Menu
       items={[
         {
-          key: '1',
+          key: "1",
           label: <Link to="/collections">Мои коллекции</Link>,
-          icon: <DatabaseOutlined />
+          icon: <DatabaseOutlined />,
         },
         {
-          key: '2',
+          key: "2",
+          label: <Link to="/collections">User List</Link>,
+          icon: <UsergroupDeleteOutlined />,
+        },
+        {
+          key: "3",
           label: <div onClick={logoutHandler}>Выйти</div>,
           icon: <LogoutOutlined />,
-          danger: true
+          danger: true,
         },
       ]}
     />
@@ -32,12 +45,18 @@ export const Navbar = () => {
   return (
     <div className="header">
       <Link className="logo" to="/homepage" />
-      <Dropdown overlay={menu}>
-        <div className="username">
-          <div>User Name</div>
-          <UserOutlined />
-        </div>
-      </Dropdown>
+      {isAuthenticated ? (
+        <Dropdown overlay={menu}>
+          <div className="username">
+            <div>{username}</div>
+            <UserOutlined />
+          </div>
+        </Dropdown>
+      ) : (
+        <Link to='/'>
+          <Button type="primary">Войти</Button>        
+        </Link>       
+      )}
     </div>
   );
 };

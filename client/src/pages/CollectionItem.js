@@ -7,13 +7,11 @@ import { AuthContext } from "../context/auth.context";
 import { Space, Table, Tag, Button, Modal, Input } from "antd";
 import React from "react";
 import { CreateItemModal } from "../components/CreateItemModal";
-import { EditItemModal } from "../components/EditItemModal";
 
 export const CollectionItem = () => {
   const { request } = useHttp();
   const { token } = useContext(AuthContext);
   const [collection, setCollection] = useState([]);
-  const [item, setItem] = useState([]);
   const [items, setItems] = useState([]);
   const collectionId = useParams().id;
   const [itemsList, setItemsList] = useState([]);
@@ -46,6 +44,8 @@ export const CollectionItem = () => {
     try {
         console.log({result: {...recordToUpdate, name: modal.name, tags: modal.tags}})
         const data = await request(`/api/item/${recordToUpdate._id}`, "PUT", {...recordToUpdate, name: modal.name, tags: modal.tags}, { Authorization: `Bearer ${token}` });
+        const updatedItemsList = itemsList.map((item) => item._id === recordToUpdate.id ? {...item, name: modal.name, tags: modal.tags} : item);
+        setItemsList(updatedItemsList)
         await message.success(data.message);
     } catch (e) {
     //   showMessage(e.message);
@@ -70,6 +70,12 @@ export const CollectionItem = () => {
       key: "tags",
       dataIndex: "tags",
     },
+    {
+      title: "Collections",
+      key: "collectionsName",
+      dataIndex: "collectionsName",
+    },
+
     {
       title: "Action",
       key: "delete",
@@ -130,8 +136,7 @@ export const CollectionItem = () => {
 
   const data = itemsList.map((item) => ({
     ...item,
-    key: item._id,
-    id: item._id,
+    key: item._id
   }));
 
   const fetchItems = useCallback(async () => {
@@ -139,9 +144,10 @@ export const CollectionItem = () => {
       const fetched = await request("/api/item/", "GET", null, {
         Authorization: `Bearer ${token}`,
       });
-      setItemsList(fetched);
+      const lol = fetched.filter((item) => item.collections === collectionId)
+      setItemsList(lol);
     } catch (e) {}
-  }, [token, request]);
+  }, [token, request, collectionId]);
 
   useEffect(() => {
     fetchItems();
@@ -165,14 +171,6 @@ export const CollectionItem = () => {
     } catch (e) {}
   }, [token, collectionId, request]);
 
-  const getItem = async (itemId) => {
-    try {
-      const fetched = await request(`/api/item/${itemId}`, "GET", null, {
-        Authorization: `Bearer ${token}`,
-      });
-      setItem(fetched);
-    } catch (e) {}
-  };
 
   useEffect(() => {
     getCollection();
@@ -185,7 +183,6 @@ export const CollectionItem = () => {
       });
       const updatedItemsList = itemsList.filter((item) => item._id !== id);
       setItemsList(updatedItemsList);
-      console.log(item);
       message.success(data.message);
     } catch (error) {
       message.error("Something went wrong, try again");
@@ -214,7 +211,8 @@ export const CollectionItem = () => {
         <div>{collection.theme}</div>
         <img src={collection.image} alt="image" />
       </div>
-      <CreateItemModal updateItems={updateItems} />
+      {/* <button type="primary" onClick={() => {console.log(collectionId)}} style={{width: 20, height: 20, marginBottom: 16}} ></button> */}
+      <CreateItemModal updateItems={updateItems} collection={collection} />
       <Table columns={columns} dataSource={data} />
     </div>
   );
