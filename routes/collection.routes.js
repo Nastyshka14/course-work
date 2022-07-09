@@ -6,9 +6,10 @@ const auth = require("../middleware/auth.middleware");
 
 router.post("/create", auth, async (req, res) => {
   try {
-    const { name, description, theme, image } = req.body;
+    const { name, description, theme, image, username } = req.body;
     const collection = new Collection({
       owner: req.user.userId,
+      ownerName: username,
       name,
       description,
       theme,

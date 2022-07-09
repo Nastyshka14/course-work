@@ -32,7 +32,7 @@ export const CollectionsPage = () => {
 
   useEffect(() => {
     fetchCollections();
-  }, [fetchCollections]);
+  }, [fetchCollections, collections]);
 
   const updateCollection = (collection) => {
     setCollections([...collections, collection])
@@ -77,7 +77,7 @@ export const CollectionsPage = () => {
   const changeHandler = (event) => {
     setModal({ ...modal, [event.target.name]: event.target.value });
   };
-  
+
   const showMessage = (msg) => {
     message.error(msg);
   };

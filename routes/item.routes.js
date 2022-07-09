@@ -6,9 +6,10 @@ const Collection = require("../models/Collection");
 
 router.post("/add", auth, async (req, res) => {
   try {
-    const { name, tags, collection } = req.body;
+    const { name, tags, collection, username } = req.body;
     const item = new Item({
       owner: req.user.userId,
+      ownerName: username,
       name,
       tags,
       collections: collection._id,
@@ -35,6 +36,11 @@ router.get("/", auth, async (req, res) => {
   }
 });
 
+router.get("/all", async (req, res) => {
+  try {
+    const items = await Item.find();
+    res.json(items);
+    
 router.get("/item/:id", auth, async (req, res) => {
   try {
     const item = await Item.findById(req.params.id);

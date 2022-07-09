@@ -155,7 +155,7 @@ export const CollectionItem = () => {
 
   useEffect(() => {
     fetchItems()
-  }, [fetchItems, items]);
+  }, [fetchItems, itemsList]);
 
 
   const getCollection = useCallback(async () => {
