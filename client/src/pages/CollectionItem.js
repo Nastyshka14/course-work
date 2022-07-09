@@ -21,7 +21,6 @@ export const CollectionItem = () => {
   const [recordToUpdate, setRecordToUpdate] = useState(null)
 
   const showModal = (record) => {
-    console.log('SHOW: ', {record})
     setModal({name: record.name, tags: record.tags});
     setRecordToUpdate(record)
     setIsModalVisible(true);
@@ -106,7 +105,7 @@ export const CollectionItem = () => {
             </Button>
             <Modal
               title="Изменить айтем"
-              visible={isModalVisible}        
+              visible={isModalVisible}
               onOk={handleOk}
               onCancel={handleCancel}
             >

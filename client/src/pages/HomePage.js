@@ -51,7 +51,7 @@ const columns = [
     title: 'Название',
     dataIndex: 'name',
     key: 'name',
-    render: (text) => <a>{text}</a>,
+    render: (_, record) => <Link to={`/item/${record._id}`}> <a>{record.name}</a> </Link>,
   },
   {
     title: 'Коллекция',
@@ -68,24 +68,6 @@ const columns = [
 
   },
 ]
-// const data = [
-//   {
-//     key: '1',
-//     name: 'Some_Item_Name',
-//     collection: 'Some_Collection',
-//     author: 'Some_Collection',
-//   },  {
-//     key: '2',
-//     name: 'Some_Item_Name',
-//     collection: 'Some_Collection',
-//     author: 'Some_Collection',
-//   },  {
-//     key: '3',
-//     name: 'Some_Item_Name',
-//     collection: 'Some_Collection',
-//     author: 'Some_Collection',
-//   },
-// ];
 
 export const HomePage = () => {
   const { request } = useHttp();
@@ -106,7 +88,7 @@ export const HomePage = () => {
   useEffect(() => {
     fetchCollections();
   }, [fetchCollections]);
-  
+
   const fetchItems = useCallback(async () => {
     try {
       const fetched = await request("/api/item/all", "GET", null);
@@ -119,12 +101,10 @@ export const HomePage = () => {
   }, [fetchItems]);
 
   const data = itemsList.map((item) => ({
-    ...item, 
+    ...item,
     key: item._id,
     author: item.ownerName,
   })).sort((a,b) => b.date > a.date ? 1 : -1).slice(0, 20)
-
-
 
   return (
     <div className="container">
@@ -155,7 +135,7 @@ export const HomePage = () => {
       </div>
 
       <h2 className="home-title">Последний добавленные айтемы</h2>
-      <button type="primary" onClick={() => {console.log(data)}} style={{width: 20, height: 20, marginBottom: 16}} ></button>
+      {/*<button type="primary" onClick={() => {console.log(data)}} style={{width: 20, height: 20, marginBottom: 16}} ></button>*/}
       <Table columns={columns} dataSource={data} />
     </div>
   )
