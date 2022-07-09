@@ -35,14 +35,14 @@ router.get("/", auth, async (req, res) => {
   }
 });
 
-// router.get("/:id", auth, async (req, res) => {
-//   try {
-//     const item = await Item.findById(req.params.id);
-//     res.json(item);
-//   } catch (e) {
-//     res.status(500).json({ message: "Something went wrong, please try again" });
-//   }
-// });
+router.get("/item/:id", auth, async (req, res) => {
+  try {
+    const item = await Item.findById(req.params.id);
+    res.json(item);
+  } catch (e) {
+    res.status(500).json({ message: "Something went wrong, please try again" });
+  }
+});
 
 router.put("/:id", auth, async (req, res) => {
   try {
