@@ -85,10 +85,21 @@ router.delete("/:id", auth, async (req, res) => {
     const { id } = req.params;
 
     await Collection.findByIdAndDelete(id);
-    // await Item.find().filter((item) => item.collections.toString() !== id)
-    const lol = (await Item.find()).map((item)=> (item.collections)).map(item => item.toString())
+    const lol = await Item.deleteMany({collections: id})
     console.log('ID', lol)
     res.json({ message: `Selected items was successfully deleted` });
+  } catch (e) {
+    res.status(500).json({ message: resMessages.basicError });
+  }
+});
+
+router.put("/:id", auth, async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Collection.findByIdAndUpdate(id, {
+      $set: { name: req.body.name, description: req.body.description, theme: req.body.theme },
+    });
+    res.json({ message: `Selected collections was successfully updated` });
   } catch (e) {
     res.status(500).json({ message: resMessages.basicError });
   }
