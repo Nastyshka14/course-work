@@ -28,7 +28,7 @@ export const CollectionItem = () => {
   };
 
   const handleOk = () => {
-      editCollectionHandler();
+      editItemsHandler();
       setIsModalVisible(false);
   };
 
@@ -40,7 +40,7 @@ export const CollectionItem = () => {
     setModal({ ...modal, [event.target.name]: event.target.value });
   };
 
-  const editCollectionHandler = async () => {
+  const editItemsHandler = async () => {
     try {
         console.log({result: {...recordToUpdate, name: modal.name, tags: modal.tags}})
         const data = await request(`/api/item/${recordToUpdate._id}`, "PUT", {...recordToUpdate, name: modal.name, tags: modal.tags}, { Authorization: `Bearer ${token}` });
@@ -149,13 +149,15 @@ export const CollectionItem = () => {
     } catch (e) {}
   }, [token, request, collectionId]);
 
+  const updateItems = (item) => {
+    setItems([...items, item])
+  }
+
+
   useEffect(() => {
-    fetchItems();
+    fetchItems()
   }, [fetchItems, items]);
 
-  const updateItems = (item) => {
-    setItems([...items, item]);
-  };
 
   const getCollection = useCallback(async () => {
     try {
