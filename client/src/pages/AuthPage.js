@@ -28,6 +28,9 @@ export const AuthPage = () => {
   const loginHandler = async () => {
     try {
       const data = await request("/api/auth/login", "POST", { ...form });
+      if(data.status !== 'active') {
+        return message.error('Ваш аккаунт ограничен, обратитесь к администрадору')
+      }
       auth.login(data.token, data.userId, data.username, data.userRole);
       navigate('/homepage')
     } catch (e) {

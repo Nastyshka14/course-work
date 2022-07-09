@@ -1,15 +1,12 @@
-import "./CollectionsPage.css";
-import React, { useCallback, useContext, useEffect, useState } from "react";
-import { ModalCreate } from "../components/ModalCreate";
-import { AuthContext } from "../context/auth.context";
+import "./UsersPage.css";
+import React, {useCallback, useEffect, useRef, useState} from "react";
 import { useHttp } from "../hooks/http.hook";
-import { Card, Space, Table, Tag } from "antd";
-import { BrowserRouter, Link, NavLink } from "react-router-dom";
-const { Meta } = Card;
+import {Button, Input, Space, Table, Tag, Tooltip} from "antd";
+import {CheckCircleOutlined, DeleteOutlined, SearchOutlined, StopOutlined} from "@ant-design/icons";
+import Highlighter from 'react-highlight-words';
 
 export const UsersPage = () => {
   const { request } = useHttp();
-  const { token } = useContext(AuthContext);
   const [users, setUsers] = useState([]);
   const fetchUsers = useCallback(async () => {
     try {
@@ -20,42 +17,66 @@ export const UsersPage = () => {
 
   useEffect(() => {
     fetchUsers();
-  }, [fetchUsers, users]);
+  }, [fetchUsers]);
 
-  //   const updateCollection = (collection) => {
-  //     setCollections([...collections, collection])
-  //     console.log('collection: ', {collection, collections})
-  //   }
+  const deleteUser = async (id) => {
+    const data = await request(`/api/auth/user/${id}`, 'DELETE')
+    fetchUsers()
+    return data
+  }
+
+  const blockUser = async (user) => {
+    const data = await request(
+      `/api/auth/user/${user._id}`,
+      'PUT',
+      { ...user, status: user.status === 'blocked' ? 'active' : 'blocked' }
+    )
+    fetchUsers()
+    return data
+  }
 
   const columns = [
-    {
-      title: "ID",
-      dataIndex: "_id",
-      key: "_id",
-      render: (text) => <a>{text}</a>,
-    },
     {
       title: "Имя",
       dataIndex: "username",
       key: "username",
-      render: (username) => <Tag>{username}</Tag>,
     },
     {
       title: "Email",
       key: "email",
       dataIndex: "email",
     },
+    {
+      title: "Статус",
+      key: "status",
+      dataIndex: "status",
+      render: (status) => (
+        status === 'active' ? <Tag color='green'>{status.toUpperCase()}</Tag> : <Tag color='red'>{status.toUpperCase()}</Tag>
+      )
+    },
+    {
+      title: "Действия",
+      key: "action",
+      render: (_, record) => (
+        <Space size="middle">
+          <Tooltip title='Delete'>
+            <a onClick={() => deleteUser(record._id)}>
+              <DeleteOutlined />
+            </a>
+          </Tooltip>
+          <Tooltip title={ record.status === 'active' ? 'Block' : 'Unblock' }>
+            <a onClick={() => blockUser(record)}>{
+              record.status === 'active' ? <StopOutlined/> : <CheckCircleOutlined /> }
+            </a>
+          </Tooltip>
+        </Space>
+      )
+    },
   ];
 
   return (
     <div className="container">
-      {/* <ModalCreate updateCollection={updateCollection} /> */}
-
-      <div className="collectionsList">
-        <div>
-          <Table columns={columns} dataSource={users} />
-        </div>
-      </div>
+      <Table columns={columns} dataSource={users} />
     </div>
   );
 };

@@ -78,7 +78,7 @@ router.post(
       const token = jwt.sign({ userId: user.id }, config.get("jwtSecret"), {
         expiresIn: "1h",
       });
-      res.json({ token, userId: user.id, username: user.username, userRole: user.role });
+      res.json({ token, userId: user.id, username: user.username, userRole: user.role, status: user.status });
     } catch (e) {
       res
         .status(500)
@@ -91,6 +91,27 @@ router.get("/users", async (req, res) => {
   try {
     const users = await User.find();
     res.json(users);
+  } catch (e) {
+    res.status(500).json({ message: "Something went wrong, please try again" });
+  }
+});
+
+router.put("/user/:id", async (req, res) => {
+  try {
+    const { id } = req.params
+    const user = req.body
+    const updatedUser = await User.findByIdAndUpdate(id, user);
+    res.json({updatedUser, message: `User ${user.username} successfully updated`});
+  } catch (e) {
+    res.status(500).json({ message: "Something went wrong, please try again" });
+  }
+});
+
+router.delete("/user/:id", async (req, res) => {
+  try {
+    const { id } = req.params
+    const user = await User.findByIdAndDelete(id);
+    res.json({ message: `User successfully deleted` });
   } catch (e) {
     res.status(500).json({ message: "Something went wrong, please try again" });
   }
