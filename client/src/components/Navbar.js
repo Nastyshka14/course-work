@@ -14,33 +14,46 @@ export const Navbar = () => {
   const auth = useContext(AuthContext);
   const isAuthenticated = auth.isAuthenticated;
   const username = auth.username;
+  const userRole = auth.userRole
 
   const logoutHandler = (event) => {
     auth.logout();
   };
 
-  const menu = (
-    <Menu
-      items={[
-        {
-          key: "1",
-          label: <Link to="/collections">Мои коллекции</Link>,
-          icon: <DatabaseOutlined />,
-        },
-        {
-          key: "2",
-          label: <Link to="/users">Users List</Link>,
-          icon: <UsergroupDeleteOutlined />,
-        },
-        {
-          key: "3",
-          label: <div onClick={logoutHandler}>Выйти</div>,
-          icon: <LogoutOutlined />,
-          danger: true,
-        },
-      ]}
-    />
-  );
+  const menuItemsUser = [
+    {
+      key: "1",
+      label: <Link to="/collections">Мои коллекции</Link>,
+      icon: <DatabaseOutlined />,
+    },
+    {
+      key: "3",
+      label: <div onClick={logoutHandler}>Выйти</div>,
+      icon: <LogoutOutlined />,
+      danger: true,
+    },
+  ]
+
+  const menuItemsAdmin = [
+    {
+      key: "1",
+      label: <Link to="/collections">Мои коллекции</Link>,
+      icon: <DatabaseOutlined />,
+    },
+    {
+      key: "2",
+      label: <Link to="/users">Users List</Link>,
+      icon: <UsergroupDeleteOutlined />,
+    },
+    {
+      key: "3",
+      label: <div onClick={logoutHandler}>Выйти</div>,
+      icon: <LogoutOutlined />,
+      danger: true,
+    },
+  ]
+
+  const menu = userRole === 'Admin' ? <Menu items={ menuItemsAdmin } /> : <Menu items={ menuItemsUser } />
 
   return (
     <div className="header">
@@ -54,8 +67,8 @@ export const Navbar = () => {
         </Dropdown>
       ) : (
         <Link to='/'>
-          <Button type="primary">Войти</Button>        
-        </Link>       
+          <Button type="primary">Войти</Button>
+        </Link>
       )}
     </div>
   );
