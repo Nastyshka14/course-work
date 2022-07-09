@@ -7,6 +7,7 @@ import { HomePage } from "./pages/HomePage";
 import { ModalCreate } from "./components/ModalCreate";
 import { CollectionItem } from "./pages/CollectionItem";
 import { UsersPage } from "./pages/UsersPage";
+import { ItemPage } from "./pages/ItemPage";
 
 export const useRoutes = (userRole) => {
   return (
@@ -18,6 +19,7 @@ export const useRoutes = (userRole) => {
       <Route path="/detail/:id" element={<CollectionItem />}></Route>
       <Route path="/homepage" element={<HomePage />}></Route>
       <Route path="/users" element={<UsersPage />}></Route>
+      <Route path="/item/:id" element={<ItemPage />}></Route>
       {userRole === 'Admin' ? <Route path="/userlist" element={<HomePage />}></Route> : null}
       <Route path="*" element={<Navigate to="/homepage" replace />} />
     </Routes>
