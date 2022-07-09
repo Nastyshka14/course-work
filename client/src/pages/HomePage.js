@@ -89,7 +89,7 @@ const columns = [
 
 export const HomePage = () => {
   const { request } = useHttp();
-  const { token, username } = useContext(AuthContext);
+  const { token } = useContext(AuthContext);
   const [itemsList, setItemsList] = useState([])
   const [collections, setCollections] = useState([]);
 
@@ -109,12 +109,10 @@ export const HomePage = () => {
   
   const fetchItems = useCallback(async () => {
     try {
-      const fetched = await request("/api/item/", "GET", null, {
-        Authorization: `Bearer ${token}`,
-      });
+      const fetched = await request("/api/item/all", "GET", null);
       setItemsList(fetched);
     } catch (e) {}
-  }, [token, request]);
+  }, [request]);
 
   useEffect(() => {
     fetchItems();
@@ -123,7 +121,7 @@ export const HomePage = () => {
   const data = itemsList.map((item) => ({
     ...item, 
     key: item._id,
-    author: username,
+    author: item.ownerName,
   })).sort((a,b) => b.date > a.date ? 1 : -1).slice(0, 20)
 
 
@@ -146,7 +144,7 @@ export const HomePage = () => {
                 description={
                   <div>
                     <div>{collection.name}</div>
-                    <div>{collection.description}</div>
+                    <div>Автор: {collection.ownerName}</div>
                   </div>
                 }
               />

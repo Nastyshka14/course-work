@@ -3,7 +3,7 @@ import React, {useCallback, useEffect, useRef, useState} from "react";
 import { useHttp } from "../hooks/http.hook";
 import {Button, Input, Space, Table, Tag, Tooltip} from "antd";
 import {CheckCircleOutlined, DeleteOutlined, SearchOutlined, StopOutlined} from "@ant-design/icons";
-import Highlighter from 'react-highlight-words';
+
 
 export const UsersPage = () => {
   const { request } = useHttp();

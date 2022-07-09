@@ -6,9 +6,10 @@ const Collection = require("../models/Collection");
 
 router.post("/add", auth, async (req, res) => {
   try {
-    const { name, tags, collection } = req.body;
+    const { name, tags, collection, username } = req.body;
     const item = new Item({
       owner: req.user.userId,
+      ownerName: username,
       name,
       tags,
       collections: collection._id,
@@ -29,6 +30,15 @@ router.get("/", auth, async (req, res) => {
     const items = await Item.find({
       owner: req.user.userId,
     });
+    res.json(items);
+  } catch (e) {
+    res.status(500).json({ message: "Something went wrong, please try again" });
+  }
+});
+
+router.get("/all", async (req, res) => {
+  try {
+    const items = await Item.find();
     res.json(items);
   } catch (e) {
     res.status(500).json({ message: "Something went wrong, please try again" });

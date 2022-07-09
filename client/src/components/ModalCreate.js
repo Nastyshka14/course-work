@@ -13,7 +13,7 @@ const { Option } = Select;
 
 
 export const ModalCreate = ({updateCollection}) => {
-  const auth = useContext(AuthContext);
+  const {token, username} = useContext(AuthContext);
   const {request} = useHttp();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [image, setImage] = useState('')
@@ -40,7 +40,7 @@ const onChangeInput = (event) => {
 
 const createCollectionHandler = async () => {
   try {
-    const data = await request( '/api/collection/create', 'POST', {...modal, image}, {Authorization: `Bearer ${auth.token}`})
+    const data = await request( '/api/collection/create', 'POST', {...modal, image, username}, {Authorization: `Bearer ${token}`})
     updateCollection(data)
     await message.success(data.message);
   } catch (e) {

@@ -7,6 +7,7 @@ const schema = new Schema({
   collections: { type: Types.ObjectId, ref: "Collection" },
   collectionsName:{type: String, ref: 'Collection'},
   owner: { type: Types.ObjectId, ref: "User" },
+  ownerName:{type: String, ref: 'User'},
 });
 
 module.exports = model("Item", schema);

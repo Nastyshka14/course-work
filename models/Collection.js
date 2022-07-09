@@ -7,7 +7,8 @@ const schema = new Schema({
   image: { type: String },
   date: { type: Date, default: new Date() },
   items: { type: Types.ObjectId, ref: "Item" },
-  owner: { type: Types.ObjectId, ref: "User" }
+  owner: { type: Types.ObjectId, ref: "User" },
+  ownerName:{type: String, ref: 'User'},
 });
 
 module.exports = model("Collection", schema);

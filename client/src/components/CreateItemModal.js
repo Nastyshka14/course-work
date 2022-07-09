@@ -11,7 +11,7 @@ import { AuthContext } from '../context/auth.context';
 
 
 export const CreateItemModal = ({updateItems, collection}) => {
-  const auth = useContext(AuthContext);
+  const {token, username} = useContext(AuthContext);
   const {request} = useHttp();
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modal, setModal] = useState({
@@ -21,14 +21,14 @@ export const CreateItemModal = ({updateItems, collection}) => {
 
 
 const changeHandler = (event) => {
-  console.log('collec', collection)
+  console.log('collec', username)
     setModal({ ...modal, [event.target.name]: event.target.value });
 };
 
 
 const createCollectionHandler = async () => {
   try {
-    const data = await request( '/api/item/add', 'POST', {...modal, collection}, {Authorization: `Bearer ${auth.token}`})
+    const data = await request( '/api/item/add', 'POST', {...modal, collection, username}, {Authorization: `Bearer ${token}`})
     updateItems(data)
     await message.success(data.message);
     console.log(data)
