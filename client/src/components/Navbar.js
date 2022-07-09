@@ -29,7 +29,7 @@ export const Navbar = () => {
         },
         {
           key: "2",
-          label: <Link to="/collections">User List</Link>,
+          label: <Link to="/users">Users List</Link>,
           icon: <UsergroupDeleteOutlined />,
         },
         {

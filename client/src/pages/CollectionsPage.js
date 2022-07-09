@@ -3,7 +3,7 @@ import React, { useCallback, useContext, useEffect, useState } from "react";
 import { ModalCreate } from "../components/ModalCreate";
 import { AuthContext } from "../context/auth.context";
 import { useHttp } from "../hooks/http.hook";
-import { Card } from 'antd';
+import { Card, message, } from 'antd';
 import { BrowserRouter, Link, NavLink } from "react-router-dom";
 const { Meta } = Card;
 
@@ -27,7 +27,24 @@ export const CollectionsPage = () => {
 
   const updateCollection = (collection) => {
     setCollections([...collections, collection])
-    console.log('collection: ', {collection, collections})
+  }
+
+  const deleteCollection = async (id) => {
+    try {
+      const data = await request(`/api/collection/${id}`, "DELETE", null, {
+        Authorization: `Bearer ${token}`,
+      });
+      const updatedCollectionsList = collections.filter((item) => item._id !== id);
+      setCollections(updatedCollectionsList);
+      message.success(data.message);
+    } catch (error) {
+      message.error("Something went wrong, try again");
+    }
+  };
+
+  function deleteCollectionHandler (event, id) {
+    event.preventDefault()
+    deleteCollection(id)
   }
 
   return (
@@ -51,6 +68,7 @@ export const CollectionsPage = () => {
                   <div>
                     <div>{collection.name}</div>
                     <div>{collection.description}</div>
+                    <button type="primary" onClick={(event) => deleteCollectionHandler(event, collection._id)} style={{width: 20, height: 20, marginBottom: 16}} ></button>
                   </div>
                 }
               />

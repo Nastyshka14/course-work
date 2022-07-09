@@ -6,7 +6,7 @@ const schema = new Schema({
   theme: { type: String },
   image: { type: String },
   date: { type: Date, default: new Date() },
-  items: [{ type: Types.ObjectId, ref: "Item" }],
+  items: { type: Types.ObjectId, ref: "Item" },
   owner: { type: Types.ObjectId, ref: "User" }
 });
 

@@ -14,7 +14,6 @@ router.post("/create", auth, async (req, res) => {
       theme,
       image,
     });
-    console.log("colection: ", { collection });
     await collection.save();
     res.status(201).json({ collection });
   } catch (e) {
@@ -46,16 +45,25 @@ router.get("/all", auth, async (req, res) => {
 router.get("/top", async (req, res) => {
   try {
     const Collections = await Collection.find();
-    const collectionIdsArr = Collections.map((collection) => collection.id);
+    const collectionIdsArr = await Collections.map((collection) => collection.id);
 
     const promises = collectionIdsArr.map(async (id) => {
       const count = await Item.countDocuments({ collections: id });
       return {id, count};
     });
     const result = await Promise.all(promises)
-    const result2 = result.sort((a, b) => a.count > b.count ? -1 : 1)
+    const result2 = await result.sort((a, b) => a.count > b.count ? -1 : 1)
+    const result3 = await result2.slice(0, 5)
+    
+      const result4 = await Collections.filter((collection) => {
+        if (result3.some(({ id }) => id === collection._id.toString())) {
+          return collection
+        }
 
-    res.json(result2.slice(0, 5));
+      })
+      res.json(result4)
+
+
   } catch (e) {
     res
       .status(500)
@@ -69,6 +77,20 @@ router.get("/:id", auth, async (req, res) => {
     res.json(collection);
   } catch (e) {
     res.status(500).json({ message: "Something went wrong, please try again" });
+  }
+});
+
+router.delete("/:id", auth, async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    await Collection.findByIdAndDelete(id);
+    // await Item.find().filter((item) => item.collections.toString() !== id)
+    const lol = (await Item.find()).map((item)=> (item.collections)).map(item => item.toString())
+    console.log('ID', lol)
+    res.json({ message: `Selected items was successfully deleted` });
+  } catch (e) {
+    res.status(500).json({ message: resMessages.basicError });
   }
 });
 

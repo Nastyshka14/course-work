@@ -2,7 +2,7 @@ const { Router } = require("express");
 const router = Router();
 const Item = require("../models/Item");
 const auth = require("../middleware/auth.middleware");
-const { collection } = require("../models/Item");
+const Collection = require("../models/Collection");
 
 router.post("/add", auth, async (req, res) => {
   try {
@@ -27,7 +27,7 @@ router.post("/add", auth, async (req, res) => {
 router.get("/", auth, async (req, res) => {
   try {
     const items = await Item.find({
-      owner: req.user.userId
+      owner: req.user.userId,
     });
     res.json(items);
   } catch (e) {
