@@ -40,8 +40,12 @@ router.get("/all", async (req, res) => {
   try {
     const items = await Item.find();
     res.json(items);
-    
-router.get("/item/:id", auth, async (req, res) => {
+  } catch (e) {
+    res.status(500).json({ message: "Something went wrong, please try again" });
+  }
+});
+
+router.get("/item/:id", async (req, res) => {
   try {
     const item = await Item.findById(req.params.id);
     res.json(item);

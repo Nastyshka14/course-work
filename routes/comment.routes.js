@@ -3,7 +3,7 @@ const router = Router();
 const Comment = require("../models/Comment");
 const auth = require("../middleware/auth.middleware");
 
-router.get("/:itemId", auth, async (req, res) => {
+router.get("/:itemId", async (req, res) => {
   try {
     const { itemId } = req.params
     const comments = await Comment.find({ item: itemId });
@@ -13,7 +13,7 @@ router.get("/:itemId", auth, async (req, res) => {
   }
 });
 
-router.post("/", auth, async (req, res) => {
+router.post("/", async (req, res) => {
   try {
     const comment = await new Comment({ ...req.body })
     await comment.save()
@@ -34,7 +34,7 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-router.put("/:id", auth, async (req, res) => {
+router.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
     await Comment.findByIdAndUpdate(id, req.body);

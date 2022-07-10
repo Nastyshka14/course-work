@@ -31,3 +31,8 @@
     color: #fff;
     font-size: 36px;
 }
+
+.menu-wrapp {
+    display: flex;
+    gap: 20px;
+}
