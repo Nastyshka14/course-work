@@ -8,7 +8,10 @@ import {
   DatabaseOutlined,
   LogoutOutlined,
   UsergroupDeleteOutlined,
-  AudioOutlined, PoweroffOutlined
+  AudioOutlined,
+  LockFilled
+  AudioOutlined, 
+  PoweroffOutlined
 } from "@ant-design/icons";
 import { useHttp } from "../hooks/http.hook";
 const { Search } = Input;
@@ -37,7 +40,7 @@ export const Navbar = ({toggleTheme}) => {
   const { request } = useHttp();
   const { token } = useContext(AuthContext);
   const [collections, setCollections] = useState([]);
-  const [emojies, setEmojies] = useState(collections);
+  const [emojies, setEmojies] = useState([]);
 
   // const fetchCollections = useCallback(async () => {
   //   try {
@@ -57,13 +60,12 @@ export const Navbar = ({toggleTheme}) => {
     if (inputValue) {
       setEmojies([
         ...collections.filter((emoji) =>
-          emoji.title
-            .toLocaleLowerCase()
-            .includes(inputValue.toLocaleLowerCase())
+        Object.values(emoji)
+        .toLocaleLowerCase().includes(inputValue.toLocaleLowerCase())
         ),
       ]);
     } else {
-      setEmojies(emojiesList);
+      setEmojies(collections);
     }
   };
 
@@ -108,6 +110,8 @@ export const Navbar = ({toggleTheme}) => {
 
   const onSearch = (value) => searchEmoji(value);
 
+const lol = () => collections.map((item, index) => (item))
+
 const suffix = (
   <AudioOutlined
     style={{
@@ -130,9 +134,13 @@ const suffix = (
       }}
 
     />
-    {emojies.map((item, index) => {
-          const { symbol, title } = item;
+    <Button className="list" onClick={console.log(collections)} >Войти</Button>
+      
+        {emojies.map((item, index) => {
 
+return <div className="list" key={index}> {item.name} {item.description} {item.theme}</div>;
+})}
+    </Space>
           return <div styles={{backgroundColor: 'red', width: 50}} key={index}  >{symbol} {title}</div>;
         })}
     </Space>
@@ -148,6 +156,7 @@ const suffix = (
       ) : (
         <Link to='/'>
           <Button type="primary">Войти</Button>
+          
         </Link>
       )}
 
