@@ -54,8 +54,8 @@ export const CollectionItem = () => {
   const columns = [
     {
       title: "Id",
-      dataIndex: "id",
-      key: "id",
+      dataIndex: "_id",
+      key: "_id",
       editable: true,
     },
     {
@@ -69,12 +69,6 @@ export const CollectionItem = () => {
       key: "tags",
       dataIndex: "tags",
     },
-    {
-      title: "Collections",
-      key: "collectionsName",
-      dataIndex: "collectionsName",
-    },
-
     {
       title: "Action",
       key: "delete",
@@ -121,7 +115,7 @@ export const CollectionItem = () => {
               <div className="modalInput">
                 <h3 className="inputTitle">Теги</h3>
                 <Input
-                  placeholder="Описание коллекции"
+                  placeholder="Теги"
                   name="tags"
                   value={modal.tags}
                   onChange={changeHandler}
@@ -152,10 +146,9 @@ export const CollectionItem = () => {
     setItems([...items, item])
   }
 
-
   useEffect(() => {
     fetchItems()
-  }, [fetchItems, itemsList]);
+  }, [fetchItems, itemsList, items]);
 
 
   const getCollection = useCallback(async () => {
@@ -190,29 +183,16 @@ export const CollectionItem = () => {
     }
   };
 
-  //   const handleEdit = async (id) => {
-  //     try {
-  //         const data = await request(`/api/item/${id}`, 'DELETE', null, {
-  //             Authorization: `Bearer ${token}`});
-  //         console.log('data', data)
-  //         const updatedItemsList = itemsList.filter((item) => item._id !== id);
-  //         console.log(updatedItemsList)
-  //         setItemsList(updatedItemsList);
-  //         message.success(data.message);
-  //     } catch (error) {
-  //     //   message.error('Something went wrong, try again');
-  //     }
-  //   };
-
   return (
     <div className="containerItem">
-      <div>
+      <div className="collectionInfo">
+        <img src={collection.image} alt="image" className="collectionImage" />
+        <div>
         <h2>{collection.name}</h2>
         <div>{collection.description}</div>
         <div>{collection.theme}</div>
-        <img src={collection.image} alt="image" />
+        </div>
       </div>
-      {/* <button type="primary" onClick={() => {console.log(collectionId)}} style={{width: 20, height: 20, marginBottom: 16}} ></button> */}
       <CreateItemModal updateItems={updateItems} collection={collection} />
       <Table columns={columns} dataSource={data} />
     </div>
