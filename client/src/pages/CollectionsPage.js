@@ -57,7 +57,7 @@ export const CollectionsPage = () => {
   }
 
   const showModal = (event, collection) => {
-    
+
     event.preventDefault()
     console.log('SHOW: ', {collection})
     setModal({name: collection.name, description: collection.description, theme: collection.theme});
@@ -98,10 +98,10 @@ export const CollectionsPage = () => {
     const reader = new FileReader();
     reader.onload = event => {
       setImage(event.target.result )
-  
+
     };
     reader.readAsDataURL(file);
-  
+
   }
 
   const onSearch = (value) => {
@@ -123,24 +123,23 @@ export const CollectionsPage = () => {
         {collections.map((collection, index) => {
           return (
 
-            <Link to={`/detail/${collection._id}`}>
+            <Link className="card" to={`/detail/${collection._id}`}>
             <Card
               key={index}
               hoverable
-              className="card"
               cover={<img alt="image" src={collection.image} />}
             >
               <Meta
+                className='collection-meta'
                 title={<div>{collection.theme}</div>}
                 description={
-                  <div>
+                  <div className='collection-body'>
                     <div>{collection.name}</div>
                     <div>{collection.description}</div>
-                    <button type="primary" onClick={(event) => deleteCollectionHandler(event, collection._id)} style={{width: 20, height: 20, marginBottom: 16}} >Delete</button>
-                    {/* <button onClick={(event) => showModal(event, collection)} style={{width: 20, height: 20, marginBottom: 16}} >Edit</button> */}
-                    <Button block className="showModalBtn" onClick={(event) => showModal(event, collection)} icon={<PlusCircleOutlined />} >
-        Изменить коллекцию
-      </Button>
+                    <div className='collection-btns'>
+                    <Button ghost danger block onClick={(event) => deleteCollectionHandler(event, collection._id)}>Delete</Button>
+                    <Button block onClick={(event) => showModal(event, collection)} > Изменить </Button>
+                  </div>
 
                     {/* <Button
               block
@@ -153,7 +152,7 @@ export const CollectionsPage = () => {
             </Button>
             <Modal
               title="Изменить коллекцию"
-              visible={isModalVisible}        
+              visible={isModalVisible}
               onOk={handleOk}
               onCancel={handleCancel}
             >

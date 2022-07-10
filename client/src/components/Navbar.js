@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { AuthContext } from '../context/auth.context';
-import { Button, Modal, Dropdown, Menu, Input, Space, suffix } from 'antd';
+import {Button, Modal, Dropdown, Menu, Input, Space, Tag} from 'antd';
 import './Navbar.css';
 import {
   UserOutlined,
@@ -41,7 +41,6 @@ export const Navbar = ({ toggleTheme }) => {
   };
 
   const location = useLocation();
-  console.log(location);
   const isNavbarVisible =
     location.pathname !== '/' && location.pathname !== '/reg';
 
@@ -156,16 +155,20 @@ export const Navbar = ({ toggleTheme }) => {
               }}
             />
             <Modal title="Результаты поиска" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
-            {!itemsList.length ? <div>Нет совпадений</div> : itemsList.map((item, index) => {
-              return (
-                 <Link to={item.collectionsName ? `/item/${item._id}` : `/detail/${item._id}`} onClick={handleOk}>
-                <div className='headList'>
-                <div className="listName">{item.name}</div>
-                <div className="listBelong">{item.collectionsName ? 'Коллекция: ' : 'Коллекция'}{item.collectionsName || null}</div>
-                </div>
-                </Link>
-              );
-            })}
+            {!itemsList.length ?
+              <div>Нет совпадений</div> :
+              itemsList.map((item, index) => {
+                return (
+                  <Link className='search-item' to={item.collectionsName ? `/item/${item._id}` : `/detail/${item._id}`} onClick={handleOk}>
+                    <div className='search-item-name'>
+                      {item.collectionsName ? <Tag>Айтем</Tag> : <Tag>Коллекция</Tag>}
+                      <div className="listName">{item.name}</div>
+                    </div>
+                      <div className="listBelong">{item.collectionsName ? 'Коллекция: ' : null}{item.collectionsName || null}</div>
+                  </Link>
+                );
+              }
+            )}
       </Modal>
 
 

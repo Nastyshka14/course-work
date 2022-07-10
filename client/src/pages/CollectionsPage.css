@@ -11,3 +11,23 @@
     flex-grow: 1;
     background-color: #00fff0;
 }
+
+.collection-btns {
+    width: 100%;
+    margin: 5px 0;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.collection-meta {
+    width: 100%;
+}
+
+.collection-body {
+    width: 100%;
+}
+
+.ant-card-meta-detail {
+    width: 100%;
+}
