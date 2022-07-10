@@ -25,7 +25,7 @@ router.post("/create", auth, async (req, res) => {
   }
 });
 
-router.get("/", async (req, res) => {
+router.get("/", auth, async (req, res) => {
   try {
     const collections = await Collection.find({ owner: req.user.userId });
     res.json(collections);
