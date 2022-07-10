@@ -8,7 +8,8 @@ import {
   DatabaseOutlined,
   LogoutOutlined,
   UsergroupDeleteOutlined,
-  AudioOutlined
+  AudioOutlined,
+  LockFilled
 } from "@ant-design/icons";
 import { useHttp } from "../hooks/http.hook";
 const { Search } = Input;
@@ -37,7 +38,7 @@ export const Navbar = () => {
   const { request } = useHttp();
   const { token } = useContext(AuthContext);
   const [collections, setCollections] = useState([]);
-  const [emojies, setEmojies] = useState(collections);
+  const [emojies, setEmojies] = useState([]);
 
   const fetchCollections = useCallback(async () => {
     try {
@@ -57,13 +58,12 @@ export const Navbar = () => {
     if (inputValue) {
       setEmojies([
         ...collections.filter((emoji) =>
-          emoji.title
-            .toLocaleLowerCase()
-            .includes(inputValue.toLocaleLowerCase())
+        Object.values(emoji)
+        .toLocaleLowerCase().includes(inputValue.toLocaleLowerCase())
         ),
       ]);
     } else {
-      setEmojies(emojiesList);
+      setEmojies(collections);
     }
   };
 
@@ -107,7 +107,7 @@ export const Navbar = () => {
   const menu = userRole === 'Admin' ? <Menu items={ menuItemsAdmin } /> : <Menu items={ menuItemsUser } />
 
   const onSearch = (value) => searchEmoji(value);
-
+const lol = () => collections.map((item, index) => (item))
   
 
 const suffix = (
@@ -132,14 +132,17 @@ const suffix = (
       }}
       
     />
-    {emojies.map((item, index) => {
-          const { symbol, title } = item;
+    <Button className="list" onClick={console.log(collections)} >Войти</Button>
+      
+        {emojies.map((item, index) => {
 
-          return <div styles={{backgroundColor: 'red', width: 50}} key={index}  >{symbol} {title}</div>;
-        })}
-
-
+return <div className="list" key={index}> {item.name} {item.description} {item.theme}</div>;
+})}
     </Space>
+
+
+
+    
       {isAuthenticated ? (
         <Dropdown overlay={menu}>
           <div className="username">
@@ -150,6 +153,7 @@ const suffix = (
       ) : (
         <Link to='/'>
           <Button type="primary">Войти</Button>
+          
         </Link>
       )}
       

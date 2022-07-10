@@ -40,6 +40,10 @@ router.get("/all", async (req, res) => {
   try {
     const items = await Item.find();
     res.json(items);
+  } catch (e) {
+    res.status(500).json({ message: "Something went wrong, please try again" });
+  }
+});
     
 router.get("/item/:id", auth, async (req, res) => {
   try {
