@@ -32,10 +32,20 @@
     font-size: 36px;
 }
 
-.headList {
-display: flex;
-justify-content: space-between;
-border: 1px solid black;
+.search-item {
+    padding: 7px;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #e3dbdb;
+}
+
+.search-item:last-child {
+    border: none;
+}
+
+.search-item-name {
+    display: flex;
+    gap: 10px;
 }
 
 .listName {

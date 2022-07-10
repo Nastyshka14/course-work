@@ -84,7 +84,7 @@ const onSearch = (value) => {
       <Modal title="Добавить коллекцию" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
         <div className='modalInput'><h3 className='inputTitle'>Название</h3><Input placeholder="Введите название" name='name' onChange={changeHandler} /></div>
         <div className='modalInput'><h3 className='inputTitle'>Описание</h3><Input placeholder="Описание коллекции" name='description' onChange={changeHandler} /></div>
-        <div className='modalInput'><h3>Тема</h3>
+        <div className='modalInput'><h3 className='inputTitle'>Тема</h3>
         <Select
     showSearch
     placeholder="Выберите тему"
