@@ -1,25 +1,16 @@
-.container {
-    width: 85%;
-    margin: 0 auto;
+.home-title {
+    margin: 15px 0;
 }
 
 .home-collections {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
-    gap: 15px;
+    gap: 5px;
 }
 
-.card {
-    width: 19%;
+.home-collection {
+    width: 18%;
     min-width: 200px;
     flex-grow: 1;
-    background-color: #00fff0;
 }
-
-.home-title {
-    margin: 15px 0;
-}
-
-
-
