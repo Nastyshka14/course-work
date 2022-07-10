@@ -32,8 +32,14 @@
     font-size: 36px;
 }
 
-.list {
- background-color: beige;
+.headList {
+display: flex;
+justify-content: space-between;
+border: 1px solid black;
+}
+
+.listName {
+ font-weight: 600;
 }
 
 .lol {

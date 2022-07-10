@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { AuthContext } from '../context/auth.context';
-import { Button, Dropdown, Menu, Input, Space, suffix } from 'antd';
+import { Button, Modal, Dropdown, Menu, Input, Space, suffix } from 'antd';
 import './Navbar.css';
 import {
   UserOutlined,
@@ -14,24 +14,7 @@ import {
 } from '@ant-design/icons';
 import { useHttp } from '../hooks/http.hook';
 const { Search } = Input;
-const emojiesList = [
-  {
-    title: '100',
-    symbol: '💯',
-    keywords:
-      'hundred points symbol symbol wow wow win win perfect perfect parties parties',
-  },
-  {
-    title: '1234',
-    symbol: '🔢',
-    keywords: 'input symbol for numbers symbol',
-  },
-  {
-    title: 'Grinning',
-    symbol: '😀',
-    keywords: 'grinning face happy smiley emotion emotion',
-  },
-];
+
 
 export const Navbar = ({ toggleTheme }) => {
   const auth = useContext(AuthContext);
@@ -41,34 +24,63 @@ export const Navbar = ({ toggleTheme }) => {
   const { request } = useHttp();
   const { token } = useContext(AuthContext);
   const [collections, setCollections] = useState([]);
-  const [emojies, setEmojies] = useState([]);
+  const [items, setItems] = useState([]);
+  const [itemsList, setItemsList] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
-  // const fetchCollections = useCallback(async () => {
-  //   try {
-  //     const fetched = await request("/api/collection/", "GET", null, {
-  //       Authorization: `Bearer ${token}`,
-  //     });
-  //     setCollections(fetched);
-  //
-  //   } catch (e) {}
-  // }, [token, request]);
-  //
-  // useEffect(() => {
-  //   fetchCollections();
-  // }, [fetchCollections, collections]);
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
+
+  const handleOk = () => {
+    setIsModalVisible(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
+
+  const location = useLocation();
+  console.log(location);
+  const isNavbarVisible =
+    location.pathname !== '/' && location.pathname !== '/reg';
+
+  const fetchItems = useCallback(async () => {
+    try {
+      const fetched = await request('/api/item/', 'GET', null, {
+        Authorization: `Bearer ${token}`,
+      });
+      setItems(fetched);
+    } catch (e) {}
+  }, [token, request]);
+
+  useEffect(() => {
+    fetchItems();
+  }, [fetchItems]);
+
+  const fetchCollections = useCallback(async () => {
+    try {
+      const fetched = await request('/api/collection/', 'GET', null, {
+        Authorization: `Bearer ${token}`,
+      });
+      setCollections(fetched);
+    } catch (e) {}
+  }, [token, request]);
+
+  useEffect(() => {
+    fetchCollections();
+  }, [fetchCollections]);
 
   const searchEmoji = (inputValue) => {
     if (inputValue) {
-      setEmojies([
+      setItemsList([
         ...collections.filter((emoji) =>
-          Object.values(emoji)
-            .toLocaleLowerCase()
-            .includes(inputValue.toLocaleLowerCase())
-        ),
-      ]);
-    } else {
-      setEmojies(collections);
-    }
+          Object.values(emoji).includes(inputValue)
+        ),  ...items.filter((emoji) =>
+        Object.values(emoji).includes(inputValue))]);
+    };
+    if (!itemsList) {
+    <div className="list">Nothing</div>}
   };
 
   const logoutHandler = (event) => {
@@ -115,9 +127,9 @@ export const Navbar = ({ toggleTheme }) => {
       <Menu items={menuItemsUser} />
     );
 
-  const onSearch = (value) => searchEmoji(value);
-
-  const lol = () => collections.map((item, index) => item);
+  function onSearch (value) {
+    showModal()
+    searchEmoji(value); }
 
   const suffix = (
     <AudioOutlined
@@ -129,50 +141,56 @@ export const Navbar = ({ toggleTheme }) => {
   );
 
   return (
-    <div className="header">
-      <Link className="logo" to="/homepage" />
+    <>
+      {isNavbarVisible ? (
+        <div className="header">
+          <Link className="logo" to="/homepage" />
 
-      <Space direction="vertical">
-        <Search
-          placeholder="input search text"
-          allowClear
-          onSearch={onSearch}
-          style={{
-            width: 200,
-          }}
-        />
-        <Button className="list" onClick={console.log(collections)}>
-          Войти
-        </Button>
+          <Space direction="vertical">
+            <Search
+              placeholder="input search text"
+              allowClear
+              onSearch={(value) => onSearch(value)}
+              style={{
+                width: 200,
+              }}
+            />
+            <Modal title="Результаты поиска" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+            {!itemsList.length ? <div>Нет совпадений</div> : itemsList.map((item, index) => {
+              return (
+                 <Link to={item.collectionsName ? `/item/${item._id}` : `/detail/${item._id}`} onClick={handleOk}>
+                <div className='headList'>
+                <div className="listName">{item.name}</div>
+                <div className="listBelong">{item.collectionsName ? 'Коллекция: ' : 'Коллекция'}{item.collectionsName || null}</div>
+                </div>
+                </Link>
+              );
+            })}
+      </Modal>
 
-        {emojies.map((item, index) => {
-          return (
-            <div className="list" key={index}>
-              {' '}
-              {item.name} {item.description} {item.theme}
-            </div>
-          );
-        })}
-      </Space>
 
-      <div className="menu-wrapp">
-        {isAuthenticated ? (
-          <Dropdown overlay={menu}>
-            <div className="username">
-              <div>{username}</div>
-              <UserOutlined />
-            </div>
-          </Dropdown>
-        ) : (
-          <Link to="/">
-            <Button type="primary">Войти</Button>
-          </Link>
-        )}
+          </Space>
 
-        <Button ghost shape="circle" onClick={toggleTheme}>
-          <PoweroffOutlined />
-        </Button>
-      </div>
-    </div>
-  );
-};
+          <div className="menu-wrapp">
+            {isAuthenticated ? (
+              <Dropdown overlay={menu}>
+                <div className="username">
+                  <div>{username}</div>
+                  <UserOutlined />
+                </div>
+              </Dropdown>
+            ) : (
+              <Link to="/">
+                <Button type="primary">Войти</Button>
+              </Link>
+            )}
+
+            <Button ghost shape="circle" onClick={toggleTheme}>
+              <PoweroffOutlined />
+            </Button>
+          </div>
+        </div>
+      ) : null}
+    </>
+  )
+}
