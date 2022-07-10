@@ -1,51 +1,12 @@
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./HomePage.css";
-import {Card, Space, Table, Tag} from "antd";
+import {Card, message, Space, Spin, Table, Tag} from "antd";
 import { useHttp } from "../hooks/http.hook";
 import { AuthContext } from "../context/auth.context";
 import { Link } from "react-router-dom";
+import {BASIC_ERROR} from "../shared/constants";
 const { Meta } = Card;
 
-// сделать отдельный компонент CollectionsList и использовать его в HomePage & CollectionsPage
-
-// const collections = [
-//   {
-//     date: "2022-07-01T10:42:08.696Z",
-//     description: "description",
-//     image: "",
-//     name: "name",
-//     owner: "62bb2d754d63ee5a0b8331e9",
-//     theme: "Jack",
-//   },  {
-//     date: "2022-07-01T10:42:08.696Z",
-//     description: "description",
-//     image: "",
-//     name: "name",
-//     owner: "62bb2d754d63ee5a0b8331e9",
-//     theme: "Jack",
-//   },  {
-//     date: "2022-07-01T10:42:08.696Z",
-//     description: "description",
-//     image: "",
-//     name: "name",
-//     owner: "62bb2d754d63ee5a0b8331e9",
-//     theme: "Jack",
-//   },  {
-//     date: "2022-07-01T10:42:08.696Z",
-//     description: "description",
-//     image: "",
-//     name: "name",
-//     owner: "62bb2d754d63ee5a0b8331e9",
-//     theme: "Jack",
-//   },  {
-//     date: "2022-07-01T10:42:08.696Z",
-//     description: "description",
-//     image: "",
-//     name: "name",
-//     owner: "62bb2d754d63ee5a0b8331e9",
-//     theme: "Jack",
-//   },
-// ]
 const columns = [
   {
     title: 'Название',
@@ -65,7 +26,6 @@ const columns = [
     title: 'Автор',
     key: 'author',
     dataIndex: 'author',
-
   },
 ]
 
@@ -74,31 +34,33 @@ export const HomePage = () => {
   const { token } = useContext(AuthContext);
   const [itemsList, setItemsList] = useState([])
   const [collections, setCollections] = useState([]);
+  const [loading, setLoading] = useState(false)
 
-  const fetchCollections = useCallback(async () => {
+  const fetchCollections = async () => {
+    setLoading(true)
     try {
-      const fetched = await request("/api/collection/top", "GET", null, {
-        Authorization: `Bearer ${token}`,
-      });
+      const fetched = await request('/api/collection/top', 'GET', null);
       setCollections(fetched);
+      setLoading(false)
+    } catch (e) {
+      setLoading(false)
+      message.error(BASIC_ERROR)
+    }
+  }
 
-    } catch (e) {}
-  }, [token, request]);
+  const fetchItems = async () => {
+    try {
+      const fetched = await request('/api/item/all', 'GET', null);
+      setItemsList(fetched);
+    } catch (e) {
+      message.error(BASIC_ERROR)
+    }
+  }
 
   useEffect(() => {
     fetchCollections();
-  }, [fetchCollections]);
-
-  const fetchItems = useCallback(async () => {
-    try {
-      const fetched = await request("/api/item/all", "GET", null);
-      setItemsList(fetched);
-    } catch (e) {}
-  }, [request]);
-
-  useEffect(() => {
-    fetchItems();
-  }, [fetchItems]);
+    fetchItems()
+  }, []);
 
   const data = itemsList.map((item) => ({
     ...item,
@@ -107,36 +69,37 @@ export const HomePage = () => {
   })).sort((a,b) => b.date > a.date ? 1 : -1).slice(0, 20)
 
   return (
-    <div className="container">
-      <h2 className="home-title">Топ 5 самых больших коллекций</h2>
-      <div className="home-collections">
-        {collections.map((collection, index) => {
-          return (
-            <Link to={`/detail/${collection._id}`}>
-            <Card
-              key={index}
-              hoverable
-              className="card"
-              cover={<img alt="image" src={collection.image} />}
-            >
-              <Meta
-                title={<div>{collection.theme}</div>}
-                description={
-                  <div>
-                    <div>{collection.name}</div>
-                    <div>Автор: {collection.ownerName}</div>
-                  </div>
-                }
-              />
-            </Card>
-            </Link>
-          );
-        })}
-      </div>
+    <Spin spinning={loading}>
+      <div className="container">
+        <h2 className="home-title">Топ 5 самых больших коллекций</h2>
+        <div className="home-collections">
+          {collections.map((collection, index) => {
+            return (
+              <Link to={`/detail/${collection._id}`}>
+                <Card
+                  key={index}
+                  hoverable
+                  className="card"
+                  cover={<img alt="image" src={collection.image} />}
+                >
+                  <Meta
+                    title={<div>{collection.theme}</div>}
+                    description={
+                      <div>
+                        <div>{collection.name}</div>
+                        <div>Автор: {collection.ownerName}</div>
+                      </div>
+                    }
+                  />
+                </Card>
+              </Link>
+            );
+          })}
+        </div>
 
-      <h2 className="home-title">Последний добавленные айтемы</h2>
-      {/*<button type="primary" onClick={() => {console.log(data)}} style={{width: 20, height: 20, marginBottom: 16}} ></button>*/}
-      <Table columns={columns} dataSource={data} />
-    </div>
+        <h2 className="home-title">Последний добавленные айтемы</h2>
+        <Table columns={columns} dataSource={data} />
+      </div>
+    </Spin>
   )
 }

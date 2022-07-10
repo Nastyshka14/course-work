@@ -25,7 +25,7 @@ router.post("/create", auth, async (req, res) => {
   }
 });
 
-router.get("/", auth, async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const collections = await Collection.find({ owner: req.user.userId });
     res.json(collections);
@@ -34,7 +34,7 @@ router.get("/", auth, async (req, res) => {
   }
 });
 
-router.get("/all", auth, async (req, res) => {
+router.get("/all", async (req, res) => {
   try {
     const collections = await Collection.find();
     res.json(collections);
@@ -55,7 +55,7 @@ router.get("/top", async (req, res) => {
     const result = await Promise.all(promises)
     const result2 = await result.sort((a, b) => a.count > b.count ? -1 : 1)
     const result3 = await result2.slice(0, 5)
-    
+
       const result4 = await Collections.filter((collection) => {
         if (result3.some(({ id }) => id === collection._id.toString())) {
           return collection
@@ -72,7 +72,7 @@ router.get("/top", async (req, res) => {
   }
 });
 
-router.get("/:id", auth, async (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
     const collection = await Collection.findById(req.params.id);
     res.json(collection);

@@ -31,10 +31,17 @@
     color: #fff;
     font-size: 36px;
 }
+
 .list {
  background-color: beige;
 }
+
 .lol {
     width: 50;
     height: 50;
+}
+
+.menu-wrapp {
+    display: flex;
+    gap: 20px;
 }
