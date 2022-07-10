@@ -2,7 +2,7 @@ import React, {useState, useCallback, useContext, useEffect} from "react";
 import {useHttp} from "../hooks/http.hook";
 import {useParams} from "react-router-dom";
 import {AuthContext} from "../context/auth.context";
-import {Avatar, Comment, Form, Tag, Button, Tooltip, Modal} from "antd";
+import {Avatar, Comment, Form, Tag, Button, Tooltip, Modal, message} from "antd";
 import "./ItemPage.css";
 import TextArea from "antd/es/input/TextArea";
 import { DislikeFilled, DislikeOutlined, LikeFilled, LikeOutlined, EditOutlined } from '@ant-design/icons';
@@ -13,6 +13,7 @@ export const ItemPage = () => {
   const { token } = useContext(AuthContext);
   const { username } = useContext(AuthContext);
   const { userId } = useContext(AuthContext);
+  const { isAuthenticated } = useContext(AuthContext);
   const itemId = useParams().id;
 
   const [item, setItem] = useState({})
@@ -93,19 +94,23 @@ export const ItemPage = () => {
   };
 
   const like = (comment) => {
-    editComment({
-      ...comment,
-      liked: [...comment.liked, userId],
-      disliked: comment.disliked.filter(item => item !== userId)
-    })
+    if(isAuthenticated) {
+      editComment({
+        ...comment,
+        liked: [...comment.liked, userId],
+        disliked: comment.disliked.filter(item => item !== userId)
+      })
+    }
   };
 
   const dislike = (comment) => {
-    editComment({
-      ...comment,
-      disliked: [...comment.disliked, userId],
-      liked: comment.liked.filter(item => item !== userId)
-    })
+    if (isAuthenticated) {
+      editComment({
+        ...comment,
+        disliked: [...comment.disliked, userId],
+        liked: comment.liked.filter(item => item !== userId)
+      })
+    }
   };
 
   const showEditModal = (comment) => {
@@ -163,16 +168,18 @@ export const ItemPage = () => {
         <Tag>{item.collectionsName}</Tag>
       </div>
 
-      <div>Добавить коммент</div>
-
-      <Form.Item>
-        <TextArea rows={4} onChange={handleCommentChange} value={comment} />
-      </Form.Item>
-      <Form.Item>
-        <Button onClick={addComment} type="primary">
-          Add Comment
-        </Button>
-      </Form.Item>
+      {isAuthenticated ?
+        <>
+          <div>Оставь свой отзыв</div>
+          <Form.Item>
+            <TextArea rows={4} onChange={handleCommentChange} value={comment} />
+          </Form.Item>
+          <Form.Item>
+            <Button onClick={addComment} type="primary">
+              Add Comment
+            </Button>
+          </Form.Item>
+        </> : null}
 
       {comments.map((comment, index) => {
         const date = dayjs(comment.date).format('DD.MM.YYYY HH:mm')

@@ -8,7 +8,7 @@ import {
   DatabaseOutlined,
   LogoutOutlined,
   UsergroupDeleteOutlined,
-  AudioOutlined
+  AudioOutlined, PoweroffOutlined
 } from "@ant-design/icons";
 import { useHttp } from "../hooks/http.hook";
 const { Search } = Input;
@@ -29,7 +29,7 @@ const emojiesList = [
     "keywords": "grinning face happy smiley emotion emotion"
   }]
 
-export const Navbar = () => {
+export const Navbar = ({toggleTheme}) => {
   const auth = useContext(AuthContext);
   const isAuthenticated = auth.isAuthenticated;
   const username = auth.username;
@@ -39,19 +39,19 @@ export const Navbar = () => {
   const [collections, setCollections] = useState([]);
   const [emojies, setEmojies] = useState(collections);
 
-  const fetchCollections = useCallback(async () => {
-    try {
-      const fetched = await request("/api/collection/", "GET", null, {
-        Authorization: `Bearer ${token}`,
-      });
-      setCollections(fetched);
-
-    } catch (e) {}
-  }, [token, request]);
-
-  useEffect(() => {
-    fetchCollections();
-  }, [fetchCollections, collections]);
+  // const fetchCollections = useCallback(async () => {
+  //   try {
+  //     const fetched = await request("/api/collection/", "GET", null, {
+  //       Authorization: `Bearer ${token}`,
+  //     });
+  //     setCollections(fetched);
+  //
+  //   } catch (e) {}
+  // }, [token, request]);
+  //
+  // useEffect(() => {
+  //   fetchCollections();
+  // }, [fetchCollections, collections]);
 
   const searchEmoji = (inputValue) => {
     if (inputValue) {
@@ -108,8 +108,6 @@ export const Navbar = () => {
 
   const onSearch = (value) => searchEmoji(value);
 
-  
-
 const suffix = (
   <AudioOutlined
     style={{
@@ -130,16 +128,16 @@ const suffix = (
       style={{
         width: 200,
       }}
-      
+
     />
     {emojies.map((item, index) => {
           const { symbol, title } = item;
 
           return <div styles={{backgroundColor: 'red', width: 50}} key={index}  >{symbol} {title}</div>;
         })}
-
-
     </Space>
+
+    <div className="menu-wrapp">
       {isAuthenticated ? (
         <Dropdown overlay={menu}>
           <div className="username">
@@ -152,7 +150,11 @@ const suffix = (
           <Button type="primary">Войти</Button>
         </Link>
       )}
-      
+
+      <Button ghost shape="circle" onClick={toggleTheme}><PoweroffOutlined /></Button>
+    </div>
+
+
     </div>
   );
 };
