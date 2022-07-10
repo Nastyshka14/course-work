@@ -36,17 +36,7 @@ const editCollectionHandler = async (id) => {
       showMessage(e.message);
   }
 };
-// const handleDelete = async (id) => {
-//     try {
-//         const data = await request(`/api/item/${id}`, 'DELETE', null, {
-//             Authorization: `Bearer ${token}`});
-//         const updatedItemsList = itemsList.filter((item) => item._id !== id);
-//         setItemsList(updatedItemsList);
-//         message.success(data.message);
-//     } catch (error) {
-//       message.error('Something went wrong, try again');
-//     }
-//   };
+
 
 const showMessage = (msg) => {
   message.error(msg);
@@ -76,7 +66,7 @@ const onSearch = (value) => {
       </Button>
       <Modal title="Изменить айтем" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
         <div className='modalInput'><h3 className='inputTitle'>Название</h3><Input placeholder="Изменить название" name='name' onChange={changeHandler} /></div>
-        <div className='modalInput'><h3 className='inputTitle'>Теги</h3><Input placeholder="Описание коллекции" name='tags' onChange={changeHandler} /></div>
+        <div className='modalInput'><h3 className='inputTitle'>Теги</h3><Input placeholder="Теги" name='tags' onChange={changeHandler} /></div>
       </Modal>
     </>
   );
