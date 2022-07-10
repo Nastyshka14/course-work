@@ -75,11 +75,10 @@ export const HomePage = () => {
         <div className="home-collections">
           {collections.map((collection, index) => {
             return (
-              <Link to={`/detail/${collection._id}`}>
+              <Link to={`/detail/${collection._id}`} className="home-collection">
                 <Card
                   key={index}
                   hoverable
-                  className="card"
                   cover={<img alt="image" src={collection.image} />}
                 >
                   <Meta
