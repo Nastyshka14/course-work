@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/auth.context';
 import {Button, Modal, Dropdown, Menu, Input, Space, Tag} from 'antd';
 import './Navbar.css';
@@ -27,6 +27,7 @@ export const Navbar = ({ toggleTheme }) => {
   const [items, setItems] = useState([]);
   const [itemsList, setItemsList] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const navigate = useNavigate()
 
   const showModal = () => {
     setIsModalVisible(true);
@@ -84,6 +85,7 @@ export const Navbar = ({ toggleTheme }) => {
 
   const logoutHandler = (event) => {
     auth.logout();
+    navigate('/homepage')
   };
 
   const menuItemsUser = [

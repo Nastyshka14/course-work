@@ -59,7 +59,6 @@ export const CollectionsPage = () => {
   const showModal = (event, collection) => {
 
     event.preventDefault()
-    console.log('SHOW: ', {collection})
     setModal({name: collection.name, description: collection.description, theme: collection.theme});
     setRecordToUpdate(collection)
     setIsModalVisible(true);
@@ -122,12 +121,12 @@ export const CollectionsPage = () => {
       <div className="collectionsList">
         {collections.map((collection, index) => {
           return (
-
             <Link className="card" to={`/detail/${collection._id}`}>
             <Card
+            
               key={index}
               hoverable
-              cover={<img alt="image" src={collection.image} />}
+              cover={<img className="lol" alt="image" src={collection.image || '../standart.jfif'} />}
             >
               <Meta
                 className='collection-meta'
@@ -135,47 +134,10 @@ export const CollectionsPage = () => {
                 description={
                   <div className='collection-body'>
                     <div>{collection.name}</div>
-                    <div>{collection.description}</div>
                     <div className='collection-btns'>
                     <Button ghost danger block onClick={(event) => deleteCollectionHandler(event, collection._id)}>Delete</Button>
                     <Button block onClick={(event) => showModal(event, collection)} > Изменить </Button>
                   </div>
-
-                    {/* <Button
-              block
-              className="showModalBtn"
-              onClick={() => showModal(collection)}
-              type="primary"
-              style={{ marginBottom: 16 }}
-            >
-              Изменить collection
-            </Button>
-            <Modal
-              title="Изменить коллекцию"
-              visible={isModalVisible}
-              onOk={handleOk}
-              onCancel={handleCancel}
-            >
-              <div className="modalInput">
-                <h3 className="inputTitle">Название</h3>
-                <Input
-                  placeholder="Изменить название"
-                  name="name"
-                  value={modal.name}
-                  onChange={changeHandler}
-                />
-              </div>
-              <div className="modalInput">
-                <h3 className="inputTitle">Описание</h3>
-                <Input
-                  placeholder="Описание коллекции"
-                  name="description"
-                  value={modal.description}
-                  onChange={changeHandler}
-                />
-              </div>
-
-            </Modal> */}
                   </div>
                 }
               />
@@ -195,7 +157,7 @@ export const CollectionsPage = () => {
     optionFilterProp="children"
     onChange={handleChange}
     onSearch={onSearch}
-    value={modal.name}
+    value={modal.theme}
     filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())}
   >
     <Option value='Книги'>Книги</Option>

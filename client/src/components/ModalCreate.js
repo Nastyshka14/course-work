@@ -27,11 +27,14 @@ const changeHandler = (event) => {
     setModal({ ...modal, [event.target.name]: event.target.value });
 };
 
+
+
 const onChangeInput = (event) => {
   const file = event.target.files.item(0)
   const reader = new FileReader();
   reader.onload = event => {
-    setImage(event.target.result )
+    setImage(event.target.result)
+    
 
   };
   reader.readAsDataURL(file);
@@ -63,6 +66,7 @@ const onSearch = (value) => {
   const handleOk = () => {
     setIsModalVisible(false);
     createCollectionHandler()
+    console.log(updateCollection)
 
 
   };
