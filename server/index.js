@@ -1,8 +1,13 @@
 const express = require("express");
 const config = require("config");
 const mongoose = require("mongoose");
+const cors = require('cors')
 require('dotenv').config()
 const app = express();
+
+app.use(
+  cors({ origin: ['https://itra-course-work.herokuapp.com', 'http://localhost:3000'] })
+);
 
 app.use(express.json({ extended: true }));
 app.use("/api/auth", require("./routes/auth.routes"));
