@@ -1,6 +1,6 @@
 import { useCallback, useContext, useEffect, useState } from "react";
 import { useHttp } from "../hooks/http.hook";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import "./CollectionItem.css";
 import { message, Popconfirm } from "antd";
 import { AuthContext } from "../context/auth.context";
@@ -118,7 +118,7 @@ export const CollectionItem = () => {
       title: "Name",
       dataIndex: "name",
       key: "name",
-      editable: true,
+      render: (_, record) =><Link to={`/item/${record._id}`}> <a>{record.name}</a> </Link>
     },
     {
       title: "Tags",

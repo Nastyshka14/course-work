@@ -13,7 +13,7 @@ const { Option } = Select;
 
 export const CollectionsPage = () => {
   const { request } = useHttp();
-  const { token } = useContext(AuthContext);
+  const { token, userId } = useContext(AuthContext);
   const [collections, setCollections] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [image, setImage] = useState('')
@@ -115,7 +115,7 @@ export const CollectionsPage = () => {
 
 
   return (
-    <div className="container">
+    <div className="container"> 
       <ModalCreate updateCollection={updateCollection} />
 
       <div className="collectionsList">
