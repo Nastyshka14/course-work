@@ -6,12 +6,16 @@ export const useHttp = () => {
   const request = useCallback(
     async (url, method = 'GET', body = null, headers = {}) => {
       setLoading(true);
+      // FOR LOCAL
+      // const apiUrl = `http://localhost:8080${url}`
+
+      const apiUrl = `https://collection-create.herokuapp.com${url}`
       try {
         if (body) {
           body = JSON.stringify(body);
           headers['Content-Type'] = 'application/json';
         }
-        const response = await fetch(url, { method, body, headers });
+        const response = await fetch(apiUrl, { method, body, headers });
         const data = await response.json();
         if (!response.ok) {
           throw new Error(data.message || 'Что-то пошло не так');
