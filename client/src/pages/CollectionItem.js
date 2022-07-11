@@ -51,6 +51,62 @@ export const CollectionItem = () => {
     }
   };
 
+  const data = itemsList.map((item) => ({
+    ...item,
+    key: item._id
+  }));
+
+  const fetchItems = useCallback(async () => {
+    try {
+      const fetched = await request("/api/item/", "GET", null, {
+        Authorization: `Bearer ${token}`,
+      });
+      const lol = fetched.filter((item) => item.collections === collectionId)
+      setItemsList(lol);
+    } catch (e) {}
+  }, [token, request, collectionId]);
+
+  const updateItems = (item) => {
+    setItems([...items, item])
+  }
+
+  useEffect(() => {
+    fetchItems()
+  }, [fetchItems, itemsList, items]);
+
+
+  const getCollection = useCallback(async () => {
+    try {
+      const fetched = await request(
+        `/api/collection/${collectionId}`,
+        "GET",
+        null,
+        {
+          Authorization: `Bearer ${token}`,
+        }
+      );
+      setCollection(fetched);
+    } catch (e) {}
+  }, [token, collectionId, request]);
+
+
+  useEffect(() => {
+    getCollection();
+  }, [getCollection]);
+
+  const handleDelete = async (id) => {
+    try {
+      const data = await request(`/api/item/${id}`, "DELETE", null, {
+        Authorization: `Bearer ${token}`,
+      });
+      const updatedItemsList = itemsList.filter((item) => item._id !== id);
+      setItemsList(updatedItemsList);
+      message.success(data.message);
+    } catch (error) {
+      message.error("Something went wrong, try again");
+    }
+  };
+
   const columns = [
     {
       title: "Id",
@@ -126,62 +182,6 @@ export const CollectionItem = () => {
         ) : null,
     },
   ];
-
-  const data = itemsList.map((item) => ({
-    ...item,
-    key: item._id
-  }));
-
-  const fetchItems = useCallback(async () => {
-    try {
-      const fetched = await request("/api/item/", "GET", null, {
-        Authorization: `Bearer ${token}`,
-      });
-      const lol = fetched.filter((item) => item.collections === collectionId)
-      setItemsList(lol);
-    } catch (e) {}
-  }, [token, request, collectionId]);
-
-  const updateItems = (item) => {
-    setItems([...items, item])
-  }
-
-  useEffect(() => {
-    fetchItems()
-  }, [fetchItems, itemsList, items]);
-
-
-  const getCollection = useCallback(async () => {
-    try {
-      const fetched = await request(
-        `/api/collection/${collectionId}`,
-        "GET",
-        null,
-        {
-          Authorization: `Bearer ${token}`,
-        }
-      );
-      setCollection(fetched);
-    } catch (e) {}
-  }, [token, collectionId, request]);
-
-
-  useEffect(() => {
-    getCollection();
-  }, [getCollection]);
-
-  const handleDelete = async (id) => {
-    try {
-      const data = await request(`/api/item/${id}`, "DELETE", null, {
-        Authorization: `Bearer ${token}`,
-      });
-      const updatedItemsList = itemsList.filter((item) => item._id !== id);
-      setItemsList(updatedItemsList);
-      message.success(data.message);
-    } catch (error) {
-      message.error("Something went wrong, try again");
-    }
-  };
 
   return (
     <div className="containerItem">

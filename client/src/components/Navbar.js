@@ -47,12 +47,10 @@ export const Navbar = ({ toggleTheme }) => {
 
   const fetchItems = useCallback(async () => {
     try {
-      const fetched = await request('/api/item/', 'GET', null, {
-        Authorization: `Bearer ${token}`,
-      });
+      const fetched = await request('/api/item/all', 'GET', null);
       setItems(fetched);
     } catch (e) {}
-  }, [token, request]);
+  }, [request]);
 
   useEffect(() => {
     fetchItems();
@@ -60,12 +58,10 @@ export const Navbar = ({ toggleTheme }) => {
 
   const fetchCollections = useCallback(async () => {
     try {
-      const fetched = await request('/api/collection/', 'GET', null, {
-        Authorization: `Bearer ${token}`,
-      });
+      const fetched = await request('/api/collection/all', 'GET', null);
       setCollections(fetched);
     } catch (e) {}
-  }, [token, request]);
+  }, [request]);
 
   useEffect(() => {
     fetchCollections();
